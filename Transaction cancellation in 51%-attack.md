@@ -14,8 +14,10 @@ In the case of contradicting transactions the nodes will endup in permanent chai
 
 With this rule if there is no contradicting transactions the blockchain can split and rejoin up to the length where the first transaction spending newly mined coins occurs, in other words, the reorganization length can be reduced to the mined money unlock window parameter’s value since miners can protect their chain just by spending mined coins as soon as they unlock. Therefore, to allow larger reorganizations this parameter should be set at reasonable value.
 
-The simple attack on network to cause chain spit: an attacker sends same coins to himself via different nodes and if two nodes include contradicting transactions into different blocks they will go astray each in own chain. To mitigate such attack the comparison of transactions should be triggered not immediately when the reorganisation occurs but if an alternative chain is longer than usual reorganisation which is rarely more than 2 blocks.
+The simple attack on network to cause chain spit: an attacker sends same coins to himself via different nodes and if two nodes include contradicting transactions into different blocks they will go astray each in own chain. To mitigate such attack the comparison of transactions can be triggered not immediately when the reorganisation occurs but if an alternative chain is longer than usual reorganisation which is rarely more than 2 blocks i.e. after the 'grace period'.
 
 The intoducing of grace period opens the way to bypass the comparison by 'move to cancel' attack as described by zakurai from XSH: 51% capable miner can wait for *n* confirmations then do reorg by reincluding transaction he wants to cancel into the last block then do small reorg within the grace period in which transactions are not compared.
+
+Therefore the 'grace period' method is futile. Trailing checkpoint system can address the issue of split chains.
 
 [1] https://en.bitcoin.it/wiki/Irreversible_Transactions
