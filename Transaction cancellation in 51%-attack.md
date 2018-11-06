@@ -14,10 +14,17 @@ In the case of contradicting transactions the nodes will endup in permanent chai
 
 With this rule if there is no contradicting transactions the blockchain can split and rejoin up to the length where the first transaction spending newly mined coins occurs, in other words, the reorganization length can be reduced to the mined money unlock window parameter’s value since miners can protect their chain just by spending mined coins as soon as they unlock. Therefore, to allow larger reorganizations this parameter should be set at reasonable value.
 
-The simple attack on network to cause chain spit: an attacker sends same coins to himself via different nodes and if two nodes include contradicting transactions into different blocks they will go astray each in own chain. To mitigate such attack the comparison of transactions can be triggered not immediately when the reorganisation occurs but if an alternative chain is longer than usual reorganisation which is rarely more than 2 blocks i.e. after the 'grace period'.
+The simple attack on network to cause chain spit, let's call it 'split attack': an attacker sends same coins to himself via different nodes and if two nodes include contradicting transactions into different blocks they will go astray each in own chain. To mitigate such attack the comparison of transactions can be triggered not immediately when the reorganisation occurs but if an alternative chain is longer than usual reorganisation which is rarely more than 2 blocks i.e. after the 'grace period'.
 
-The introducing of grace period opens the way to bypass the comparison by 'move to cancel' attack as described by zakurai from XSH: 51% capable miner can wait for *n* confirmations then do reorganization by reincluding transaction he wants to cancel into the last block then do small reorganization within the grace period in which transactions are not compared.
+The introducing of grace period opens the way to bypass the comparison by 'zakurai attack' aka 'lift to cancel' attack: 51% capable miner can wait for *n* confirmations then do reorganization by reincluding transaction he wants to cancel into the last block then do small reorganization within the grace period in which transactions are not compared.
 
-Therefore the 'grace period' method is futile. Trailing checkpoint system can address the issue of split chains.
+It is possible to find out which transaction of contradicting ones was in the more premiere block but an attacker can include it into the earlier block in privately mined alt. chain than in the public chain i.e. it will first mine transaction in his hidden chain then send doublespending transaction to the exchange in the main chain in hope that we will take naive approach and select the block that appeared earlier.
+
+Therefore the 'grace period' method or selecting the chain where spending occurred first is futile. We know that an attacker spends coins in the public blockchain simultaneously mining a private alternative chain which he will try to impose instead of the public one. Therefore we should not give up public chain no matter what.
+
+Trailing checkpoint system formed by the quorum of public and decentralized nodes can address the 'split attack' on public chain. It can not be, however, simple majority of nodes, because an attacker could run large number of nodes under his control to fake votes in favor of his alternative chain. A quorum of masternodes is therefore required for selecting the right chain. To run the masternode a collateral is required which greatly reduces the possibility of attack because an attacker will have not only to gain 51% of network hashrate but also to make significant economical investment in collaterals in order to get control over the majority of masternodes, which is supposed to be hardly achievable since running masternode is rewarded and therefore attractive.
+
+
+
 
 [1] https://en.bitcoin.it/wiki/Irreversible_Transactions
