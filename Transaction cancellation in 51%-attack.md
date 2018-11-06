@@ -16,7 +16,7 @@ With this rule if there is no contradicting transactions the blockchain can spli
 
 The simple attack on network to cause chain spit: an attacker sends same coins to himself via different nodes and if two nodes include contradicting transactions into different blocks they will go astray each in own chain. To mitigate such attack the comparison of transactions can be triggered not immediately when the reorganisation occurs but if an alternative chain is longer than usual reorganisation which is rarely more than 2 blocks i.e. after the 'grace period'.
 
-The intoducing of grace period opens the way to bypass the comparison by 'move to cancel' attack as described by zakurai from XSH: 51% capable miner can wait for *n* confirmations then do reorg by reincluding transaction he wants to cancel into the last block then do small reorg within the grace period in which transactions are not compared.
+The introducing of grace period opens the way to bypass the comparison by 'move to cancel' attack as described by zakurai from XSH: 51% capable miner can wait for *n* confirmations then do reorganization by reincluding transaction he wants to cancel into the last block then do small reorganization within the grace period in which transactions are not compared.
 
 Therefore the 'grace period' method is futile. Trailing checkpoint system can address the issue of split chains.
 
