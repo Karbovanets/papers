@@ -22,8 +22,7 @@ It is possible to find out which transaction of contradicting ones was in the mo
 
 Therefore the 'grace period' method or selecting the chain where spending occurred first is futile. We know that an attacker spends coins in the public blockchain simultaneously mining a private alternative chain which he will try to impose instead of the public one. Therefore we should not give up public chain no matter what.
 
-Trailing checkpoint system formed by the quorum of public and decentralized nodes can address the 'split attack' on public chain. It can not be, however, simple majority of nodes, because an attacker could run large number of nodes under his control to fake votes in favor of his alternative chain. A quorum of masternodes is therefore required for selecting the right chain. To run the masternode a collateral is required which greatly reduces the possibility of attack because an attacker will have not only to gain 51% of network hashrate but also to make significant economical investment in collaterals in order to get control over the majority of masternodes, which is supposed to be hardly achievable since running masternode is rewarded and therefore attractive.
-
+Trailing checkpoint system formed by the quorum of public and decentralized nodes can address the 'split attack' on public chain. It can not be, however, simple majority of nodes, because an attacker could run the large number of nodes under his control to fake votes in favor of his alternative chain. A quorum of masternodes is therefore required for selecting the right chain. To run the masternode a collateral deposit is necessary which greatly reduces the possibility of attack because an attacker will have not only to gain 51% of network hashrate but also to make significant economical investment in collaterals in order to get control over the majority of masternodes, which is supposed to be hardly achievable since running masternode is rewarded and attractive.
 
 
 
