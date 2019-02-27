@@ -25,6 +25,13 @@ To prevent the ability of the attacker to spawn the large number of his nodes to
 
 
 
+The masternodes register themselves on blockchain with special transaction that has `extra` fields, containing masternode’s IP, and `reserve_address`.
+
+
+In voting can only participate masternodes, registered *before* the split. This ensures all nodes on both partitions have the same list of masternodes which allows to reach consensus.
+
+
+
 Each masternode has special Json RPC handle `/collateral` with such fields in response:
 
 -   `reserve_address` – public address (the same address as for receiving fees is used);
