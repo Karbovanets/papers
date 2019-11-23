@@ -4,8 +4,7 @@ The security of PoW is based on the assumption that it is unfeasible to achieve 
 
 Thus we identified a problem in current state of PoW — the lack of security ensured by a *stake in equipment*. So we came to obvious, naive and simple solution: add to PoW, what has become missing — a **stake**. The basic idea is that in order to mine a block the miner must stake the number of coins that is not less than the current minimum amount. It is worth mentioning, that the similar idea was first proposed by Qi Zhou [2].
 
-A miner forms the coinbase transaction as follows: he sends to himself the amount not less than the required minimum and adds the block reward. This is enough to prove and verify his collateral stake in a simple way. There is *mined money unlock window* `L`, a rule which locks all outputs in coinbase transaction for *n* blocks. This means that coins from coinbase transaction can be spent only after *n* blocks. Therefore, to be able to mine blocks successively, miner will have to possess much more money than minimum stake amount for one block,— he will need a separate stake for each block until his stake for his first mined block is unlocked. This will substantially increase the cost of 51% attack, the cost of being large miner or running a mining pool since the miner or the owner of the pool will have to acquire sufficient part of coins in circulation. 
-Coins transferred in a coinbase transaction prove possession without revealing sender and recipient.
+A miner forms the coinbase transaction as follows: he sends to himself (or someone else, unimportant) the amount not less than the required minimum and adds the block reward. Coins transferred in a coinbase transaction prove possession without revealing sender and recipient. This is enough to prove and verify his collateral stake in a simple way. There is *mined money unlock window* `L`, a rule which locks all outputs in coinbase transaction for *n* blocks. This means that coins from coinbase transaction can be spent only after *n* blocks. Therefore, to be able to mine blocks successively, miner will have to possess much more money than minimum stake amount for one block,— he will need a separate stake for each block until his stake for his first mined block is unlocked. This will substantially increase the cost of 51% attack, the cost of being large miner or running a mining pool since the miner or the owner of the pool will have to acquire sufficient part of coins in circulation.
 
 In the first version of the KIP-002 the minimum stake amount was determined by difficulty. The preliminary proposal was that the minimum *stake* in atomic units should be equal to the next difficulty multiplied by factor *m*. Miners themselves define the level of stakes by the intensity of mining i.e. *difficulty* which is in turn, related to coin’s price. This `m` factor should be defined economically from the current network state and conditions.” [3] How exactly this factor should be defined was not explained in that proposal. Moreover, the problem is that *m* factor or a *stake to difficulty ratio* is arbitrary and hard to set properly. 
 
@@ -33,7 +32,7 @@ Or
 
 `S = (R ÷ I × 100 + E ÷ L ÷ P) ÷ 2`.
 
-Our `I ÷ 100` can be rounded up to 666, as interest rate per day is 0.15 (calculated by emission-based stake and current reward), then
+Our `I ÷ 100` can be rounded to 666, as interest rate per day is 0.15 (calculated by emission-based stake and current reward), then
 
 `S = (R × 666 + E ÷ L ÷ P) ÷ 2`.
 
