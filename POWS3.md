@@ -32,12 +32,12 @@ Or
 
 `S = (R ÷ I × 100 + E ÷ L ÷ P) ÷ 2`.
 
-Our `I ÷ 100` can be rounded to 666, as interest rate per day is 0.15 (calculated by emission-based stake and current reward), then
+Our `I ÷ 100` can be rounded to 666, as interest rate per day is 0.15 (calculated by emission-based stake and reward, current when this model is introduced to the network), then
 
 `S = (R × 666 + E ÷ L ÷ P) ÷ 2`.
 
-
-
+\
+\
 References:
 
 [1] https://twitter.com/zawy3/status/1082199522812612608
