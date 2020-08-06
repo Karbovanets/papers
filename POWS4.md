@@ -22,9 +22,7 @@ The basic idea is that in order to mine a block the miner must stake the number 
 
 A miner forms the coinbase transaction as follows: he sends to himself (or someone else, unimportant) the amount not less than the required minimum and adds the block reward. Coins transferred in a coinbase transaction prove possession without revealing sender and recipient. This is enough to prove and verify his collateral stake in a simple way. There is *mined money unlock window* `L`, a rule which locks all outputs in coinbase transaction for a period of *n* blocks. This means that coins from coinbase transaction can be spent only after *n* blocks are mined. Therefore, to be able to mine blocks successively, miner will have to possess much more money than minimum stake amount for one block, — he will need a separate stake for each block until his stake for his first mined block is unlocked. This will substantially increase the cost of 51% attack, the cost of being large miner or running a mining pool since the miner or the operator of the pool will have to acquire sufficient part of coins in circulation. [4]
 
-The preliminary proposal was that the minimum *stake* should be determined by the next *difficulty* multiplied by factor *m*. Miners themselves define the level of stakes by the intensity of mining i.e. *difficulty* which is in turn, related to coin’s price. This `m` factor should be defined economically from the current network state and conditions.” [4] But there is a problem in defining this factor. Moreover, the problem is that this *m* factor is arbitrary and hard to set properly.
-
-While we were trying to find a way of determining the above difficulty factor [5] we came to this alternative proposal, that is based on economical security of the network and profitability of stake deposits not on difficulty. A *stake* can be described as a **short term deposit**, and deposit has to yield returns or *interest*. In other words, locking amount of coins `S` for the whole day `L` to get reward `R` must be economically profitable. The *interest rate* `I` of *stake deposit* can be determined as:
+The minimum *stake* should be based on economical security of the network and profitability of stake deposits. A *stake* can be described as a **short term deposit**, and deposit has to yield returns or *interest*. In other words, locking amount of coins `S` for the whole day `L` to get reward `R` must be economically profitable. The *interest rate* `I` of *stake deposit* can be determined as:
 
 `I = R × 100 ÷ Si`,
 
@@ -32,15 +30,15 @@ where `R` is the current reward, `Si` is the required stake, optimal for profita
 
 `Si = R ÷ I × 100 = R × 100 ÷ I`.
 
-**It is important to select the *stake* level that will be attractive to miners** because long cooldown period `L`, however necessary for security, creates the risk of the insufficient number of active miners with enough coins for stakes to mine `L` blocks until some of the locked coins will unlock allowing miners to repeat the cycle, which should be avoided. Incorrectly selected (too high) *minimum stake* will make mining with *stake deposits* unprofitable and unattractive, potentially leading to the spiral of death and blockchain getting stuck. Therefore the *minimum stake* should be defined in such a manner that it will ensure the profitability of *stake deposits* and attactivenes of mining.
+Too high *minimum stake* will make mining with *stake deposits* unprofitable and unattractive, potentially leading to the spiral of death and blockchain getting stuck. Therefore the *minimum stake* should be defined in such a manner that it will ensure the profitability of *stake deposits* and attactivenes of mining. We also have to remember that the reward is diminishing over time according to the emission curve, and this has to be taken into account to retain profitability and attractiveness as well.
 
-But apart from profitability, our concern is coin’s security. We need to select such stake level which will ensure that significant percent (at least 25%) of all emitted coins will be constantly engaged in mining and securing the chain. Obtaining large percent of coins in circulation in order to monopolize mining will be prohibitive, the stake level in this approach will also be quite high, thus making 51% attack attempts more costly. Besides, it can take days before miner actually finds block and coins are actually locked but miner obviously can not spend those coins while he is mining. So those coins are busy, although not technically locked during the mining, which means that the percent of coins actually engaged in mining is not only the number of currently locked coins.
+But apart from profitability, our concern is coin’s security. We need to select such stake level which will ensure that significant percent (at least 25%) of all emitted coins will be constantly engaged in mining and securing the chain. Obtaining large percent of coins in circulation in order to monopolize mining will be prohibitive, the stake level in this approach will also be quite high, thus making 51% attack attempts more costly. Besides, the percent of coins actually engaged in mining is not only the number of currently locked coins: it can take days before miner actually finds block and coins are actually locked, but he can not spend those coins while he is mining. We can say that the coins are busy, although not technically locked during the mining.
 
-Let emitted coins is `E`, then emission-based *stake* `Se` can be determined from total emission divided by lock period `L` of *stake deposit*, divided by `P`, which is the part of total number of coins in circulation (for 25% of emission `P` = 4):
+Let emitted coins is `E`, then emission-based *stake* `Se` can be determined from total emission divided by lock period `L` of *stake deposit*, divided by `P`, which is the part of total number of coins in circulation, targeted to be engaged in mining (for 25% of emission `P` = 4):
 
 `Se = E ÷ L ÷ P`.
 
-We also have to remember that the reward is diminishing over time according to the emission curve, and this has to be taken into account to retain profitability and attractiveness as well. To address this we combine the profitability-driven stake `Si` and emission-driven stake `Se` into golden mean:
+Finally we combine the profitability-driven stake `Si` and emission-driven stake `Se` into golden mean and get our `base stake`:
 
 `S = (Si + Se) ÷ 2`
 
@@ -48,28 +46,30 @@ or
 
 `S = (R ÷ I × 100 + E ÷ L ÷ P) ÷ 2`.
 
-Our `I ÷ 100` can be rounded to 666, because interest rate per day is 0.15 (calculated by emission-based stake and reward, current for the time when this model is introduced to the network), then
+The part `I ÷ 100` can be rounded to 666, because interest rate per day is 0.15 (calculated by emission-based stake and reward):
 
 `S = (R × 666 + E ÷ L ÷ P) ÷ 2`.
 
 
-This is the base value of the collateral stake for a lock period of 360 blocks, or the approximate number of blocks mined per day, taking into account the target interval between blocks of 4 minutes.
+This is the base value of the collateral stake for a lock period of `L` blocks.
 
 ### Variable stake, term and difficulty
 
-There is a risk that there may be too few active miners with enough coins to lock in the collateral stakes, causing the network to stop. In order to prevent such a scenario, the following rules are proposed:
+There still is a risk that there may be too few active miners with enough coins to lock in the collateral stakes after combining two stake levels (profitability-drived and emission-base), causing the network to stop. The cooldown period `L` creates the risk of the insufficient number of active miners with enough coins for stakes to mine `L` blocks continuously until some of the locked coins will unlock allowing miners to repeat the cycle, which should be avoided. In order to prevent such a scenario, the following rules are proposed:
 
-1) A *variable amount* of collateral stake deposit is allowed, however, the **term** of the deposit changes proportionally according to the following formula:
+1) A *variable amount* of collateral stake deposit is allowed, but, the **term** of the deposit then changes proportionally, according to the following formula:
 
-    `T = Sb ÷ S × Tb`,
+    `T = Sb ÷ Sa × Tb`,
 
-    where `T` is the *actual deposit term* of the miner, `Tb` is the *base deposit term* (the lock period is 360 blocks, i.e. the estimated number of blocks that are mined per day), `Sb` is the base stake deposit amount, `S` is the miner's stake deposit amount.
+    where `T` is the *actual deposit term* of the miner, `Tb` is the *base deposit term* (used to calculate base stake amount), `Sb` is the base stake deposit amount, `Sa` is the actual stake deposit amount.
 
-2) The *difficulty* of a block containing less stake than the base stake should be proportionally greater than the base difficulty Db:
+2) The actual *difficulty* of a block mined with less stake `Sa` than the *base stake* `Sb` should be proportionally greater than the *base difficulty* `Db`:
 
-    `D = Sb ÷ S × Db`.
+    `D = Sb ÷ Sa × Db`.
 
-3) When reorganizing into an alternate blockchain branch, the alternate branch should have not only more work (greater cumulative difficulty) but also greater cumulative stake (the sum of all stakes in blocks).
+    Base difficulty is used in diffculty adjustment calculations, whereas actual difficulty of the block is checked against the actual stake.
+
+3) When reorganizing, the alternate chain should have not only more work (greater cumulative difficulty) but also greater cumulative stake (the sum of all stakes in blocks).
 
 4) Maximum and minimum stake deposit limits are introduced:
 
@@ -78,13 +78,13 @@ There is a risk that there may be too few active miners with enough coins to loc
 
 The first rule will allow smaller stake deposits to be locked, but for a longer period thus stimulating a larger stakes. At the any arbitrary interval of time, the same part of all mined coins will still be used in mining.
 
-The second rule also encourages mining with large collateral stake, as the difficulty is much lower in this case.
+The second rule also encourages mining with large collateral stake, as the difficulty for the miner is much lower in this case.
 
 The third rule enhances the protection against 51%-attacks using only the large mining facilities without significant deposits of collateral stakes.
 
 Generally, as large stakes are stimulated, additional obstacles are created for 51% attacks, since reorganization into a certain number of blocks will require a rather large amount of coins for cumulative stake. We expect that at any point in the period of, for example, 10 blocks, there will be locked a significant amount of coins, at least a few blocks at that interval will contain the stake that will be close to a maximum effective value of about 200 thousand coins, so an attack will require to lock at least that sum in collateral. Thus we estimate several hundred thousand of coins required for 10 blocks reorganization attack, which we deem to be substantial protection against such attacks.
 
-In addition, the reward for mined blocks with a small stake will be locked for a long time together with stake, which also diminishes the attractiveness of such mining, leaving it as an emergency Plan B.
+In addition, the reward for mined blocks with a small stake will be locked for a long time together with stake, which also diminishes the attractiveness of such mining, leaving it as an emergency measure.
 
 The maximum term of stake deposit means that there will be minimum stake amount, which can be calculated from that term. 
 
