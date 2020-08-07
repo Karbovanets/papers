@@ -14,11 +14,11 @@ And that "*Large pools of computational power that exist outside of a coin pose 
 
 They summarize: "The only way a proof-of-work coin can materially reduce the risk from 51% attacks is to be the dominant application of the hardware used to mine the asset. A coin mined on widely available general purpose hardware, such as CPUs and GPUs, lacks this major security feature." [2]
 
-Above we identified a problem in the current state of PoW — the lack of security ensured by what we call a *stake in equipment*.
+Being a small coin, we can not expect that upon adopting of an ASIC-friendly algorithm a dedicated hardware ASIC will be developed specially and exclusively for Karbo. The existing ASICs for CryptoNight algorithm are not exclusive to Karbo.
 
-Being a small coin, we can not expect that upon adopting of ASIC-friendly algorithm a dedicated hardware ASIC will be developed specially and exclusively for Karbo. The existing ASICs for CryptoNight algorithm are not exclusive to Karbo.
+Dominating the particular POW algorithm is not enough if there is massive hashrate available to switch to Karbo at any time (coming from any other GPU/CPU algorithm if we change the algorithm, or from ASICs that are not currently mining Karbo but other compatible coins). In other words, merely changing POW algo to our own unique and exclusive will not remove the threat and will not improve the security of the Karbo network. On the contrary, this can potentially do more harm than good, if we take into account that there are no many coins available for mining with existing CryptoNight ASICs left.
 
-Dominating the particular POW algorithm is not enough if there is massive hashrate available to switch to Karbo at any time (coming from any other GPU/CPU algorithm if we change the algorithm, or from ASICs that are not currently mining Karbo but other compatible coins). In other words, merely changing POW algo to our own unique and exclusive, will not remove the threat and will not improve the security of the Karbo network.
+Above we identified a problem in the current state of PoW — the lack of security ensured by, as we call it, *a stake in equipment*.
 
 
 ## The proposed solution
