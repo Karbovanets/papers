@@ -46,7 +46,7 @@ Let emitted coins is `E`, then emission-based *stake* `Se` can be determined fro
 
 `Se = E ÷ L ÷ P`.
 
-Finally we combine the profitability-driven stake `Si` and emission-driven stake `Se` into golden mean and get our `base stake`:
+Finally, we combine the profitability-driven stake `Si` and emission-driven stake `Se` into golden mean and get our `base stake`:
 
 `S = (Si + Se) ÷ 2`
 
@@ -54,16 +54,17 @@ or
 
 `S = (R ÷ I × 100 + E ÷ L ÷ P) ÷ 2`.
 
-The part `I ÷ 100` can be rounded to 666, because interest rate per day is 0.15 (calculated by emission-based stake and reward):
+The part `I ÷ 100` can be rounded to 666, because the interest rate per day is 0.15 (calculated using emission-based stake and reward):
 
 `S = (R × 666 + E ÷ L ÷ P) ÷ 2`.
 
 This is the base value of the collateral stake for a lock period of `L` blocks.
 
 
+
 ### Variable stake, term and difficulty
 
-There still is a risk that there may be too few active miners with enough coins to lock in the collateral stakes after combining two stake levels (profitability-drived and emission-base), causing the network to stop. The cooldown period `L` creates the risk of the insufficient number of active miners with enough coins for stakes to mine `L` blocks continuously until some of the locked coins will unlock allowing miners to repeat the cycle, which should be avoided. In order to prevent such scenario, the following rules are proposed:
+We could have stopped and have been content at this point and could have used above base stake. But there still is a risk that there may be too few active miners with enough coins to lock in the collateral stakes after combining two stake levels (profitability-driven and emission-based), causing the network to stop. The cooldown period `L` creates the risk of the insufficient number of active miners with enough coins for stakes to mine `L` blocks continuously until some of the locked coins will unlock allowing miners to repeat the cycle, which should be avoided. In order to prevent such scenario, the following rules are proposed:
 
 1)  A *variable amount* of collateral stake deposit is allowed, but, the **term** of the deposit then changes proportionally, according to the following formula:
 
