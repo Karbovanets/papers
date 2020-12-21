@@ -15,12 +15,16 @@ The same `reserve proof` can be used for unlimited number of blocks. But the min
 
 This minimum stake can be dymamically adjusted by the current `supply` and `reward` as proposed in POWS [1].
 
+Let `B` is a base stake calculated by the current total `supply` and the block `reward`, and `N` is the maximum reorganization depth and a mined money unlock window in Karbo. Then minimum `stake` can be expressed as:
+
+`S = B × N`
+
 Alternatively, to impose the requirement to possess a stake for each mined block and preventing the sending coins to another address and reusing them in a `Stake` it is possible to add the requirement that the outputs from in the `reserve proof` can not be used again in a `Stake` for N blocks. For this purpose the `key_image` of the each `ReserveProofEntry` can be used.
 
 
 The benefit of this approach is the ability of a so-called 'cold stake', i.e. using the 'reserve proofs', generated on air-gapped, secure 'cold wallet'. 
 
-The downside is the blockchain bloat because of the size of the `reserve proofs` included, which can be significantly large. This can be addressed by imposing a limit of the maximum `reserve proof` size, i.e. the requirement of the wallet outputs optimization in order to consolidate them into a fewer outputs of larger amount(s).
+The downside is the blockchain bloat because of the size of the `reserve proofs` included, which can be significantly large. This can be addressed by imposing a limit of the maximum `reserve proof` size, i.e. the requirement of the wallet outputs optimization in order to consolidate them into a fewer outputs of larger amount(s). When consolidated wallet can generate the `reserve proof` of a size less than 10 KB, this is the proposed limit of a `reserve proof`.
 
 ## Reference implementation
 
