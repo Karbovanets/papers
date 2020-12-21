@@ -11,8 +11,6 @@ Into a `Block` a `Stake` is included, which consists from an `address` and a `re
 
 The address that receives coinbase reward must be the same that is used in the `reserve proof`. This is requred in order to prevent using someone else's reserve proofs for mining. To enable validation of this requirement the coinbase transaction's `payment proof` is included into the `Stake`.
 
-(Alternatively a pair of mining and reserve address can be used, in this case mining address must be in the `message` field of the `reserve proof` so the `reserve proof` is valid only with this address).
-
 The same `reserve proof` can be used for unlimited number of blocks. But the minimum stake requirement in this case must be significantly higher than in the first proposed 'hot' POWS scheme, where the minumum stake of ~ 5,000 KRB was required for each block. Since the reorganisation depth limit in Karbo is 10 blocks, multiplying these figures we came to the proposed minimal stake of 50,000 KRB.
 
 This minimum stake can be dymamically adjusted by the current `supply` and `reward` as proposed in POWS [1].
@@ -489,6 +487,11 @@ The example of the entire block with a stake:
 }
 ```
 
+## Notes
+
+A variant with pair of mining and reserve addresses, where mining address must be in the `message` field of the `reserve proof` so the `reserve proof` is valid only with this address), is discarded due to various risks of abuse.
+
 ## References
 
 [1] https://github.com/Karbovanets/papers/blob/master/POWS4.md
+
