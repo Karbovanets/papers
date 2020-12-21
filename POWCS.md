@@ -20,7 +20,7 @@ Alternatively, to impose the requirement to possess a stake for each mined block
 
 The benefit of this approach is the ability of a so-called 'cold stake', i.e. using the 'reserve proofs', generated on air-gapped, secure 'cold wallet'. 
 
-The downside is the blockchain bloat because of the size of the `reserve proofs` included, which can be significantly large. Therefore, it is possible to impose a limit of the maximum `reserve proof` size, i.e. the requirement of the wallet outputs optimization in order to consolidate them into a fewer outputs of larger amount(s).
+The downside is the blockchain bloat because of the size of the `reserve proofs` included, which can be significantly large. This can be addressed by imposing a limit of the maximum `reserve proof` size, i.e. the requirement of the wallet outputs optimization in order to consolidate them into a fewer outputs of larger amount(s).
 
 ## Reference implementation
 
