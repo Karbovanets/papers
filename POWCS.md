@@ -1,9 +1,9 @@
 
 # Proof of Work with Cold Stake
 
-v. 1
+v. 1.2
 
-Instead of sending coins in the coinbase transaction hereby is proposed another approach to the 'PoW with Stake' leveraging the "proof of reserve" functionality.
+Instead of sending coins in the coinbase transaction hereby is proposed another approach to the 'PoW with Stake' [1] leveraging the "proof of reserve" functionality.
 
 The implementation works as follows.
 
@@ -11,20 +11,37 @@ Into a `Block` a `Stake` is included, which consists from an `address` and a `re
 
 The address that receives coinbase reward must be the same that is used in the `reserve proof`. This is requred in order to prevent using someone else's reserve proofs for mining. To enable validation of this requirement the coinbase transaction's `payment proof` is included into the `Stake`.
 
-The same `reserve proof` can be used for unlimited number of blocks. But the minimum stake requirement in this case must be significantly higher than in the first proposed 'hot' POWS scheme, where the minumum stake of ~ 5,000 KRB was required for each block. Since the reorganisation depth limit in Karbo is 10 blocks, multiplying these figures we came to the proposed minimal stake of 50,000 KRB.
 
-This minimum stake can be dymamically adjusted by the current `supply` and `reward` as proposed in POWS [1].
+## Option 1, Unlimited
 
-Let `B` is a base stake calculated by the current total `supply` and the block `reward`, and `N` is the maximum reorganization depth and a mined money unlock window in Karbo. Then minimum `stake` can be expressed as:
+The same `reserve proof` can be used for unlimited number of blocks. But the `minimum stake` requirement in this case must be significantly higher than in the first proposed 'hot' POWS scheme, where the minumum stake of ~ 5,000 KRB was required for each block. Since the reorganisation depth limit in Karbo is 10 blocks, multiplying these figures we came to the proposed minimal stake of ~ 50,000 KRB.
+
+This `minimum stake` can be dymamically adjusted by the current `supply` and `reward` as proposed in POWS [1].
+
+Let `B` is a `base stake` calculated by the current total `supply` and the block `reward`, and `N` is the `maximum reorganization depth` and a `mined money unlock window` in Karbo. Then `minimum stake` can be expressed as:
 
 `S = B × N`
 
-Alternatively, to impose the requirement to possess a stake for each mined block and preventing the sending coins to another address and reusing them in a `Stake` it is possible to add the requirement that the outputs from in the `reserve proof` can not be used again in a `Stake` for N blocks. For this purpose the `key_image` of the each `ReserveProofEntry` can be used.
 
+## Option 2, BPS (Block per stake)
+
+Alternatively, the `base stake` is used as minimal, and same stake can be used several times in a row under these conditions:
+
+same `key_image` of the each `ReserveProofEntry` of the block's `stake` can be used in last `N` blocks only `M` times, which is 
+
+`M = A ÷ B`
+
+where `A` is actual stake, and `B` is base (minimal) stake, `N` is `money unlock window`.
+
+
+To prevent the sending coins immediately after they were used in a block to generate new `reserve proof` and reuse them, it is required that the outputs in the `reserve proof` can only be from transactions older than N blocks. This applies to both options.
+
+
+## Pros and cons
 
 The benefit of this approach is the ability of a so-called 'cold stake', i.e. using the 'reserve proofs', generated on air-gapped, secure 'cold wallet'. 
 
-The downside is the blockchain bloat because of the size of the `reserve proofs` included, which can be significantly large. This can be addressed by imposing a limit of the maximum `reserve proof` size, i.e. the requirement of the wallet outputs optimization in order to consolidate them into a fewer outputs of larger amount(s). When consolidated wallet can generate the `reserve proof` of a size less than 10 KB, this is the proposed limit of a `reserve proof`.
+The downside is the blockchain bloat because of the size of the `reserve proofs` included, which can be significantly large. This can be addressed by imposing a limit of the maximum `reserve proof` size, i.e. the requirement of the wallet outputs optimization in order to consolidate them into a fewer outputs of larger amount(s). When consolidated wallet can generate the `reserve proof` of a size well less than 10 KB, and this is the proposed max limit of a `reserve proof` size.
 
 ## Reference implementation
 
