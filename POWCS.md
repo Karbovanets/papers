@@ -1,49 +1,113 @@
 
 # Proof of Work with Cold Stake
 
-v. 1.2
+v. 1.3
 
-Instead of sending coins in the coinbase transaction hereby is proposed another approach to the 'PoW with Stake' [1] leveraging the "proof of reserve" functionality.
+\
+## What is wrong with POW and why we are going to change it?
 
-The implementation works as follows.
+\
+The security of PoW is based on the assumption that it is unfeasible to achieve the prevail in a hash rate for a single entity and even if such entity will possess that hashrate it will be economically motivated not to attack network due to its investments in mining infrastructure, which is not true, especially for small coins.
 
+The major concern for small PoW based cryptocurrencies recently has become the availability of sheer amount of hashrate that is not their native but is available for rent. This results in a series of attacks on coins utilizing rented hashrate. There is even the website *crypto51.app* which collects the theoretical cost of a 51% attack on various networks. As Scott Roberts (aka Zawy) wrote, “...the only thing protecting PoW is the stake of the equipment infrastructure... All the small coins switching to PoW algorithms that can't be easily rented is an attempt to make miners hold an equipment stake." “This shows that work in PoW is not equal to security, and secure part of PoW is PoS. If Bitcoin hashrate was rentable (no mining stakeholders) Bitcoin double spends would be easy enough to make it worthless”. He continues, “In Monero's case, PoW change was not to reduce NiceHash renting (the reason small coins change PoW) but to reduce the effects of ASICs that were in a few hands. So the key idea in both renting and concentrated ASIC problems, is that PoW works by having distributed equipment owners (stakes). It has nothing to do with work (waste). Value is created by work (waste) in BTC, which can't be done in PoS. But securing established value is accomplished by risk of value, not waste. When buying equipment, you are locking up a stake just like PoS systems require...” [1]
+
+In Coinbase's blog post Mark Nesbitt expresses the same idea: "**It is a security feature for a particular coin’s mining operations to be the dominant application of the hardware used to mine that coin.** ... *Owners of the hardware lose the value of their investment if the primary application of the hardware loses value.* ... Hardware owners are incentivized to consider the long term success of the main application of their hardware. The longer the lifetime of their equipment, the more invested they become in the long-term success of the hardware’s primary application. At time of writing, Bitcoin ASICs are beginning to have significantly longer useful lifespans as efficiency increases of newer models are diminishing." [2]
+
+And that "*Large pools of computational power that exist outside of a coin pose a security threat to the coin.* ... Coins at the greatest risk of 51% attack are the ones where there exists large amounts of hashpower not actively mining the coin that could begin mining and disrupt the coin’s blockchain. This is especially important to consider in light of the argument above regarding hardware owners’ incentives regarding their hardware’s application — if the owners of the hardware have other applications outside of mining where they can monetize their hardware investment, the negative consequences of disrupting a coin’s blockchain are minimal. ... Algorithm changes to “brick ASICs” simply allow the massive general purpose computational resources of the entire world to mine, and potentially disrupt, a cryptocurrency at will. Coins that have implemented “ASIC-resistant” algorithms have been, empirically, very susceptible to 51% attacks for this very reason. Notable examples of ASIC-resistant coins that have been successfully 51% attacked include BTG, VTC, and XVG. To date, there is not a single case where a coin that dominates its hardware class has been subject to a 51% double spend attack." [2]
+
+They summarize: "The only way a proof-of-work coin can materially reduce the risk from 51% attacks is to be the dominant application of the hardware used to mine the asset. A coin mined on widely available general purpose hardware, such as CPUs and GPUs, lacks this major security feature." [2]
+
+Being a small coin, we can not expect that upon adopting of an ASIC-friendly algorithm a dedicated hardware ASIC will be developed specially and exclusively for Karbo. The existing ASICs for CryptoNight algorithm are not exclusive to Karbo.
+
+Dominating the particular POW algorithm is not enough if there is massive hashrate available to switch to Karbo at any time (coming from any other GPU/CPU algorithm if we change the algorithm, or from ASICs that are not currently mining Karbo but other compatible coins). In other words, merely changing POW algo to our own unique and exclusive will not remove the threat and will not improve the security of the Karbo network. On the contrary, this can potentially do more harm than good, if we take into account that there are no many coins available for mining with existing CryptoNight ASICs left.
+
+Above we identified a problem in the current state of PoW — the lack of security ensured by, as we call it, *a stake in equipment*.
+
+\
+## The proposed solution
+
+The obvious, naive and simple solution is to add to PoW, what has become missing — a **stake**. But **instead of enforcing a stake in a hardware equipment we are going to enforce a stake in a coin directly**. This approach can be named "Membership POW" (MPOW), as only members or coin holders can mine it. Alongside we will change POW algorithm to CPU-mineable, GPU-unfriendly and ASICs/FPGA- neutral (at least if we will not be able to think off ASIC- resistant algo as well). We anticipate that POW part will become more supplimentary, the coin will be mieable by solo miners on their home PCs. Hovewer, this does not exclude the possibility of emerging of the mining pools completely.
+
+\
+The basic idea is that in order to mine a block the miner must stake the number of coins that is not less than the current minimum amount. It should be mentioned that, to our knowledge, the similar idea was first proposed by Qi Zhou [3], however our approach is different.
+
+Instead of sending coins in the coinbase transaction as we initially intended in  'PoW with Stake' [4], hereby is proposed another approach leveraging the "proof of reserve" functionality. The implementation works as follows.
+
+\
 Into a `Block` a `Stake` is included, which consists from an `address` and a `reserve proof` of the amount, belonging to this address, not less than the required minimum.
 
 The address that receives coinbase reward must be the same that is used in the `reserve proof`. This is requred in order to prevent using someone else's reserve proofs for mining. To enable validation of this requirement the coinbase transaction's `payment proof` is included into the `Stake`.
 
-
-## Option 1, Unlimited
-
-The same `reserve proof` can be used for unlimited number of blocks. But the `minimum stake` requirement in this case must be significantly higher than in the first proposed 'hot' POWS scheme, where the minumum stake of ~ 5,000 KRB was required for each block. Since the reorganisation depth limit in Karbo is 10 blocks, multiplying these figures we came to the proposed minimal stake of ~ 50,000 KRB.
-
-This `minimum stake` can be dymamically adjusted by the current `supply` and `reward` as proposed in POWS [1].
-
-Let `B` is a `base stake` calculated by the current total `supply` and the block `reward`, and `N` is the `maximum reorganization depth` and a `mined money unlock window` in Karbo. Then `minimum stake` can be expressed as:
-
-`S = B × N`
-
-
-## Option 2, BPS (Block per stake)
-
-Alternatively, the `base stake` is used as minimal, and same stake can be used several times in a row under these conditions:
+\
+The `base stake` `S` is minimal, and same stake can be used several times in a row under these conditions:
 
 same `key_image` of the each `ReserveProofEntry` of the block's `stake` can be used in last `N` blocks only `M` times, which is 
 
-`M = A ÷ B`
+`M = A ÷ S`
 
 where `A` is actual stake, and `B` is base (minimal) stake, `N` is `money unlock window`.
 
+Lets give an example, say if current minimum stake is 5 000 KRB and a miner included in a block reserve proof of 10 000 KRB, then he can mine 2 blocks out of 10 last blocks with this reserve proof, then he will have to wait untill someone else mines few more blocks.
 
-To prevent the sending coins immediately after they were used in a block to generate new `reserve proof` and reuse them, it is required that the outputs in the `reserve proof` can only be from transactions older than N blocks. This applies to both options.
+\
+To prevent the sending coins immediately after they were used in a block in order to generate new `reserve proof` and reuse them, it is required that the outputs in the `reserve proof` can only be from transactions older than `N` blocks.
 
+\
+## Defining minimum stake
 
+Abovementioned `minimum stake` can not be fixed and arbitrary guesstimated, it should be deterministic and dymamically adjusted by the current `supply` and `reward`, as was initially proposed in [4]. The `minimum stake` should be based on economical security of the network and profitability of the mining.
+
+### Security approach
+
+From security standpoint we need to select such stake level, which will ensure that significant percent (at least 25%) of all emitted coins will be constantly engaged in mining and securing the chain. Obtaining large percent of coins in circulation in order to *monopolize mining* will be prohibitive.
+
+Let emitted coins is `E`, then emission-based *stake* `Se` can be determined from total emission divided by estimated number of mined blocks per day `L`, divided by `P`, which is the part of total number of coins in circulation, targeted to be engaged in mining (for 25% of emission `P` = 4):
+
+`Se = E ÷ L ÷ P`".
+
+### Attractiveness approach
+
+Mining with *stake* must be economically profitable. **It is extremely important to select the base stake level that will be attractive to miners.** Too high `minimum stake` will make mining with *stake* unprofitable and unattractive, potentially leading to the spiral of death and blockchain getting stuck. Therefore the `minimum stake` should be defined in such a manner that it will ensure the profitability and attactivenes of mining. We also have to remember that the reward is diminishing over time according to the emission curve, and this has to be taken into account to retain profitability and attractiveness as well.
+
+The *interest rate* `I` of *stake deposit* can be determined as:
+
+`I = R × 100 ÷ Si`,
+
+where `R` is the current reward, `Si` is the required stake, optimal for profitability. Lets call this profitability- or interest-driven stake `Si`. The desired interest rate will allow us to find *stake* which satisfies the requirement of interest rate to be within attractive limits:
+
+`Si = R ÷ I × 100 = R × 100 ÷ I`.
+
+### So what's the minimum stake? 
+
+Finally, we combine the profitability-driven stake `Si` and emission-driven stake `Se` into golden mean and get our `base stake`:
+
+`S = (Si + Se) ÷ 2`
+
+or
+
+`S = (R ÷ I × 100 + E ÷ L ÷ P) ÷ 2`.
+
+The part `I ÷ 100` can be rounded to 666, because the interest rate per day is 0.15 (calculated using emission-based stake and reward):
+
+`S = (R × 666 + E ÷ L ÷ P) ÷ 2`.
+
+This is the base value of the collateral stake.
+
+\
 ## Pros and cons
 
 The benefit of this approach is the ability of a so-called 'cold stake', i.e. using the 'reserve proofs', generated on air-gapped, secure 'cold wallet'. 
 
 The downside is the blockchain bloat because of the size of the `reserve proofs` included, which can be significantly large. This can be addressed by imposing a limit of the maximum `reserve proof` size, i.e. the requirement of the wallet outputs optimization in order to consolidate them into a fewer outputs of larger amount(s). When consolidated wallet can generate the `reserve proof` of a size well less than 10 KB, and this is the proposed max limit of a `reserve proof` size.
 
+### What's about 51% attack?
+
+Since a miner can get one block per minimal stake, and profitability approach ensures it is reasonable and not too high, it will hopefully attact more miners, which in turn will lead to a higher hashrate, with which a miner with large stake will have to compete, thus making it harder to conduct the attack. So it will not be enough to have sufficient stake to get minimum number of block in alternative chain (current reoganization depth limit is 10 blocks), but it also will require enough hashrate, which, we hope, will not be a simple to achieve thanks to a so-called BLODHA [5], which we are going to add to POW part. Thit will make it hader to implement pooled mining, hashrate rentals and will add some botnet resistance.
+
+\
 ## Reference implementation
+
+C++ implementation of basic structures:
 
 ```
 struct ReserveProofEntry {
@@ -86,7 +150,7 @@ struct BlockTemplate : public BlockHeader {
 };
 ```
 
-The example of the entire block with a stake:
+The example of the entire block with a stake in JSON format:
 ```
 {
    "major_version":5,
@@ -508,11 +572,22 @@ The example of the entire block with a stake:
 }
 ```
 
+
+
+\
 ## Notes
 
 A variant with pair of mining and reserve addresses, where mining address must be in the `message` field of the `reserve proof` so the `reserve proof` is valid only with this address), is discarded due to various risks of abuse.
 
+\
 ## References
 
-[1] https://github.com/Karbovanets/papers/blob/master/POWS4.md
+[1] https://twitter.com/zawy3/status/1082199522812612608
 
+[2] https://blog.coinbase.com/how-coinbase-views-proof-of-work-security-f4ba1a139da0
+
+[3] https://medium.com/quarkchain-official/proof-of-staked-work-ef36f9499279
+
+[4] https://github.com/Karbovanets/papers/blob/master/POWS4.md
+
+[5] https://github.com/Karbovanets/papers/blob/master/KIP-001.md
