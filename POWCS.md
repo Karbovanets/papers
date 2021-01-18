@@ -3,10 +3,9 @@
 
 v. 1.3
 
-\
+
 ## What is wrong with POW and why we are going to change it?
 
-\
 The security of PoW is based on the assumption that it is unfeasible to achieve the prevail in a hash rate for a single entity and even if such entity will possess that hashrate it will be economically motivated not to attack network due to its investments in mining infrastructure, which is not true, especially for small coins.
 
 The major concern for small PoW based cryptocurrencies recently has become the availability of sheer amount of hashrate that is not their native but is available for rent. This results in a series of attacks on coins utilizing rented hashrate. There is even the website *crypto51.app* which collects the theoretical cost of a 51% attack on various networks. As Scott Roberts (aka Zawy) wrote, “...the only thing protecting PoW is the stake of the equipment infrastructure... All the small coins switching to PoW algorithms that can't be easily rented is an attempt to make miners hold an equipment stake." “This shows that work in PoW is not equal to security, and secure part of PoW is PoS. If Bitcoin hashrate was rentable (no mining stakeholders) Bitcoin double spends would be easy enough to make it worthless”. He continues, “In Monero's case, PoW change was not to reduce NiceHash renting (the reason small coins change PoW) but to reduce the effects of ASICs that were in a few hands. So the key idea in both renting and concentrated ASIC problems, is that PoW works by having distributed equipment owners (stakes). It has nothing to do with work (waste). Value is created by work (waste) in BTC, which can't be done in PoS. But securing established value is accomplished by risk of value, not waste. When buying equipment, you are locking up a stake just like PoS systems require...” [1]
@@ -23,7 +22,7 @@ Dominating the particular POW algorithm is not enough if there is massive hashra
 
 Above we identified a problem in the current state of PoW — the lack of security ensured by, as we call it, *a stake in equipment*.
 
-\
+
 ## The proposed solution
 
 The obvious, naive and simple solution is to add to PoW, what has become missing — a **stake**. But **instead of enforcing a stake in a hardware equipment we are going to enforce a stake in a coin directly**. This approach can be named "Membership POW" (MPOW), as only members or coin holders can mine it. Alongside we will change POW algorithm to CPU-mineable, GPU-unfriendly and ASICs/FPGA- neutral (at least if we will not be able to think off ASIC- resistant algo as well). We anticipate that POW part will become more supplimentary, the coin will be mieable by solo miners on their home PCs. Hovewer, this does not exclude the possibility of emerging of the mining pools completely.
@@ -52,7 +51,7 @@ Lets give an example, say if current minimum stake is 5 000 KRB and a miner incl
 \
 To prevent the sending coins immediately after they were used in a block in order to generate new `reserve proof` and reuse them, it is required that the outputs in the `reserve proof` can only be from transactions older than `N` blocks.
 
-\
+
 ## Defining minimum stake
 
 Abovementioned `minimum stake` can not be fixed and arbitrary guesstimated, it should be deterministic and dymamically adjusted by the current `supply` and `reward`, as was initially proposed in [4]. The `minimum stake` should be based on economical security of the network and profitability of the mining.
@@ -93,7 +92,7 @@ The part `I ÷ 100` can be rounded to 666, because the interest rate per day is 
 
 This is the base value of the collateral stake.
 
-\
+
 ## Pros and cons
 
 The benefit of this approach is the ability of a so-called 'cold stake', i.e. using the 'reserve proofs', generated on air-gapped, secure 'cold wallet'. 
@@ -104,7 +103,7 @@ The downside is the blockchain bloat because of the size of the `reserve proofs`
 
 Since a miner can get one block per minimal stake, and profitability approach ensures it is reasonable and not too high, it will hopefully attact more miners, which in turn will lead to a higher hashrate, with which a miner with large stake will have to compete, thus making it harder to conduct the attack. So it will not be enough to have sufficient stake to get minimum number of block in alternative chain (current reoganization depth limit is 10 blocks), but it also will require enough hashrate, which, we hope, will not be a simple to achieve thanks to a so-called BLODHA [5], which we are going to add to POW part. Thit will make it hader to implement pooled mining, hashrate rentals and will add some botnet resistance.
 
-\
+
 ## Reference implementation
 
 C++ implementation of basic structures:
@@ -573,13 +572,11 @@ The example of the entire block with a stake in JSON format:
 ```
 
 
-
-\
 ## Notes
 
 A variant with pair of mining and reserve addresses, where mining address must be in the `message` field of the `reserve proof` so the `reserve proof` is valid only with this address), is discarded due to various risks of abuse.
 
-\
+
 ## References
 
 [1] https://twitter.com/zawy3/status/1082199522812612608
