@@ -33,7 +33,7 @@ The basic idea is that in order to mine a block the miner must stake the number 
 Instead of sending coins in the coinbase transaction as we initially intended in  'PoW with Stake' [4], hereby is proposed another approach leveraging the "proof of reserve" functionality. The implementation works as follows.
 
 \
-Into a `Block` a `Stake` is included, which consists from an `address` and a `reserve proof` of the amount, belonging to this address, not less than the required minimum.
+A `Stake` is included in a `Block`, which consists of an `address` and a `reserve proof` of the amount, belonging to this address, not less than the required minimum.
 
 The address that receives coinbase reward must be the same that is used in the `reserve proof`. This is requred in order to prevent using someone else's reserve proofs for mining. To enable validation of this requirement the coinbase transaction's `payment proof` is included into the `Stake`.
 
@@ -49,7 +49,7 @@ where `A` is actual stake, and `B` is base (minimal) stake, `N` is `money unlock
 Lets give an example, say if current minimum stake is 5 000 KRB and a miner included in a block reserve proof of 10 000 KRB, then he can mine 2 blocks out of 10 last blocks with this reserve proof, then he will have to wait untill someone else mines few more blocks.
 
 \
-To prevent the sending coins immediately after they were used in a block in order to generate new `reserve proof` and reuse them, it is required that the outputs in the `reserve proof` can only be from transactions older than `N` blocks.
+Coins in stake's reserve proof must be mature, i.e. can only be from transactions older than N blocks. This is to prevent the sending coins immediately after they were used in a block in order to generate new `reserve proof` and reusing them.
 
 
 ## Defining minimum stake
@@ -86,9 +86,9 @@ or
 
 `S = (R ÷ I × 100 + E ÷ L ÷ P) ÷ 2`.
 
-The part `I ÷ 100` can be rounded to 666, because the interest rate per day is 0.15 (calculated using emission-based stake and reward):
+The part `I ÷ 100` can be rounded to 667, because the interest rate per day `I` calculated using emission-based stake and reward is 0.15:
 
-`S = (R × 666 + E ÷ L ÷ P) ÷ 2`.
+`S = (R × 667 + E ÷ L ÷ P) ÷ 2`.
 
 This is the base value of the collateral stake.
 
