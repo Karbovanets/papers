@@ -1,112 +1,123 @@
 
-# Proof of Work with Cold Stake
+# Доказ виконаної роботи (POW) із холодною заставою в Карбованці
 
-v. 1.3
-
-
-## What is wrong with POW and why we are going to change it?
-
-The security of PoW is based on the assumption that it is unfeasible to achieve the prevail in a hash rate for a single entity and even if such entity will possess that hashrate it will be economically motivated not to attack network due to its investments in mining infrastructure, which is not true, especially for small coins.
-
-The major concern for small PoW based cryptocurrencies recently has become the availability of sheer amount of hashrate that is not their native but is available for rent. This results in a series of attacks on coins utilizing rented hashrate. There is even the website *crypto51.app* which collects the theoretical cost of a 51% attack on various networks. As Scott Roberts (aka Zawy) wrote, “...the only thing protecting PoW is the stake of the equipment infrastructure... All the small coins switching to PoW algorithms that can't be easily rented is an attempt to make miners hold an equipment stake." “This shows that work in PoW is not equal to security, and secure part of PoW is PoS. If Bitcoin hashrate was rentable (no mining stakeholders) Bitcoin double spends would be easy enough to make it worthless”. He continues, “In Monero's case, PoW change was not to reduce NiceHash renting (the reason small coins change PoW) but to reduce the effects of ASICs that were in a few hands. So the key idea in both renting and concentrated ASIC problems, is that PoW works by having distributed equipment owners (stakes). It has nothing to do with work (waste). Value is created by work (waste) in BTC, which can't be done in PoS. But securing established value is accomplished by risk of value, not waste. When buying equipment, you are locking up a stake just like PoS systems require...” [1]
-
-In Coinbase's blog post Mark Nesbitt expresses the same idea: "**It is a security feature for a particular coin’s mining operations to be the dominant application of the hardware used to mine that coin.** ... *Owners of the hardware lose the value of their investment if the primary application of the hardware loses value.* ... Hardware owners are incentivized to consider the long term success of the main application of their hardware. The longer the lifetime of their equipment, the more invested they become in the long-term success of the hardware’s primary application. At time of writing, Bitcoin ASICs are beginning to have significantly longer useful lifespans as efficiency increases of newer models are diminishing." [2]
-
-And that "*Large pools of computational power that exist outside of a coin pose a security threat to the coin.* ... Coins at the greatest risk of 51% attack are the ones where there exists large amounts of hashpower not actively mining the coin that could begin mining and disrupt the coin’s blockchain. This is especially important to consider in light of the argument above regarding hardware owners’ incentives regarding their hardware’s application — if the owners of the hardware have other applications outside of mining where they can monetize their hardware investment, the negative consequences of disrupting a coin’s blockchain are minimal. ... Algorithm changes to “brick ASICs” simply allow the massive general purpose computational resources of the entire world to mine, and potentially disrupt, a cryptocurrency at will. Coins that have implemented “ASIC-resistant” algorithms have been, empirically, very susceptible to 51% attacks for this very reason. Notable examples of ASIC-resistant coins that have been successfully 51% attacked include BTG, VTC, and XVG. To date, there is not a single case where a coin that dominates its hardware class has been subject to a 51% double spend attack." [2]
-
-They summarize: "The only way a proof-of-work coin can materially reduce the risk from 51% attacks is to be the dominant application of the hardware used to mine the asset. A coin mined on widely available general purpose hardware, such as CPUs and GPUs, lacks this major security feature." [2]
-
-Being a small coin, we can not expect that upon adopting of an ASIC-friendly algorithm a dedicated hardware ASIC will be developed specially and exclusively for Karbo. The existing ASICs for CryptoNight algorithm are not exclusive to Karbo.
-
-Dominating the particular POW algorithm is not enough if there is massive hashrate available to switch to Karbo at any time (coming from any other GPU/CPU algorithm if we change the algorithm, or from ASICs that are not currently mining Karbo but other compatible coins). In other words, merely changing POW algo to our own unique and exclusive will not remove the threat and will not improve the security of the Karbo network. On the contrary, this can potentially do more harm than good, if we take into account that there are no many coins available for mining with existing CryptoNight ASICs left.
-
-Above we identified a problem in the current state of PoW — the lack of security ensured by, as we call it, *a stake in equipment*.
+v. 1.4
 
 
-## The proposed solution
+## Що не так із POW і чому ми збираємось його змінити?
 
-The obvious, naive and simple solution is to add to PoW, what has become missing — a **stake**. But **instead of enforcing a stake in a hardware equipment we are going to enforce a stake in a coin directly**. This approach can be named "Membership POW" (MPOW), as only members or coin holders can mine it. Alongside we will change POW algorithm to CPU-mineable, GPU-unfriendly and ASICs/FPGA- neutral. We also add a so-called BloDHa [5].
+Безпека монет із Доказом виконання роботи (PoW) ґрунтується на припущенні, що добитись переваги в хешрейті для одного суб'єкта неможливо і, навіть якщо хтось матиме такий хешрейт, він буде економічно мотивований не атакувати мережу через свої інвестиції в інфраструктуру для видобутку. Це припущення вже не відповідає дійсності і основною проблемою для невеликих криптовалют на базі PoW стала наявність великої кількості хешрейту, який не є їх питомим, а доступний для оренди. Це призводить до атак на монети, з використанням орендованих потужностей. Існує навіть веб-сайт crypto51.app, який збирає теоретичну вартість 51% нападу на різні мережі. Як написав Скотт Робертс (він же Zawi), "... єдине, що захищає PoW, — це доля в обладнанні для майнінгу … Усі дрібні монети, що переходять на алгоритми PoW, які неможливо легко взяти в оренду, — це спроба змусити майнерів інвестувати в обладнання для майнінгу". "Це показує, що робота в PoW не дорівнює безпеці, а безпечна частина PoW це — PoS. Якби хешрейт Біткойна був легко доступний в оренду (без зацікавлених сторін у видобутку), подвійні витрати в Біткойні були б досить легкими, щоб зробити його нічого не вартим". Він продовжує: "У випадку Monero зміна PoW полягала не в тому, щоб зменшити оренду NiceHash (причина, чому дрібні монети змінюють PoW), а щоб зменшити вплив ASIC, які були у кількох руках. Отже, ключовою ідеєю як проблем оренди хешрейту, так і проблем централізації ASIC, є те що PoW працює, розподіляючи власників обладнання (долі чи ставки). Це не має нічого спільного з роботою (витратою). У Біткойні цінність створюється роботою (витратою), що неможливо зробити в PoS. Але забезпечення встановленої цінності здійснюється за рахунок ризику вартості, а не витратою (електроенергії). Купуючи обладнання, ви заморожуєте ставку так само, як вимагає система PoS ... " [1]
 
-\
-The basic idea is that in order to mine a block the miner must stake the number of coins that is not less than the current minimum amount. It should be mentioned that, to our knowledge, the similar idea was first proposed by Qi Zhou [3], however our approach is different.
 
-Instead of sending coins in the coinbase transaction as we initially intended in  'PoW with Stake' [4], hereby is proposed another approach leveraging the "proof of reserve" functionality. The implementation works as follows.
+У блозі Coinbase Марк Несбіт стверджує те саме: **“Домінуюче застосування обладнання, яке використовується для видобутку монети є тією функцією її системи видобування, що гарантує безпеку.** … *Власники обладнання втрачають у вартості їх інвестицій якщо _основне застосування_ цього обладнання втрачає в ціні.* … Власники обладнання мають стимул дбати про довгостроковий успіх _основного застосування_ свого обладнання. Чим довший термін експлуатації їх обладнання, тим більше вкладають у довготривалий успіх _основного застосування_ обладнання. На момент написання ASIC-и для Біткойна починають мати значно більші терміни прибуткового використання, оскільки підвищення ефективності нових моделей зменшується." [2]
+
+А також що *"Великі пули обчислювальної потужності, які існують поза екосистемою монети, становлять загрозу безпеці монети.* … Монети з найбільшим ризиком нападу 51% — це ті, де існує велика кількість потужностей, які активно не видобувають  монету, але можуть почати видобуток і порушити блокчейн монети. Це особливо важливо враховувати у світлі наведеного вище аргументу щодо стимулів власників апаратних засобів щодо застосування їх обладнання — якщо у власників обладнання є інші застосування поза майнінгом, де вони можуть монетизувати свої інвестиції в це обладнання, негативні наслідки порушення блокчейну монети мінімальні. … Зміни алгоритму “аби перетворити ASIC-и на брухт” просто дозволяють масивним обчислювальним ресурсам всього світу видобувати та, можливо, атакувати криптовалюту за власним бажанням. Монети, які реалізували алгоритми "стійкі до ASIC-ів", були емпірично дуже вразливі до 51%-атак саме з цієї причини. Примітні приклади монет, стійких до ASIC, на які успішно провели атаки 51%, включають BTG, VTC та XVG. На сьогоднішній день не існує жодного випадку, коли монета, яка домінує в своєму апаратному класі, зазнала нападу подвійних витрат 51%" [2].
+
+Вони підсумовують це твердження: "Єдиний спосіб для монети, що використовує доказ підтвердження роботи істотно знизити ризик від 51% атак — це домінуюче застосування обладнання, яке використовується для її видобутку. У монет, що видобувається на широко доступному обладнанні загального призначення, такому як центральні процесори та графічні процесори, відсутня ця основна функція безпеки ". [2]
+
+
+**Таким чином, ми визначили проблему в поточному стані PoW — відсутність безпеки за рахунок *інвестицій в обладнання*.**
+
+
+Будучи невеликою монетою, ми не можемо сподіватися, що після прийняття алгоритму, сприятливого для ASIC, буде створено спеціально і виключно для Karbo апаратне обладнання ASIC. Існуючі ASIC-и для алгоритму CryptoNight не присвячені суто Карбо. 
+
+Недостатньо домінувати у певному алгоритмі POW при умові наявності великого хешрейту який може переключитись на Карбованець в будь-який момент (наприклад, з іншого GPU/CPU алгоритму, якщо ми змінимо алгоритм, або із ASIC-ів які в даний момент на видобувають Карбованець а інші сумісні монети). Іншими словами, навіть проста зміна алгориму POW на свій власний унікальний алгоритм не усуне потенційні загрози і не покращить безпеку мережі Карбованця. Навпаки, потенційно це може призвести до більшої шкоди, якщо взати до уваги те що поточні ASIC-ки на CryptoNight мають дуже обмежене коло монет які вони можуть майнити.
+
+Отже, вище ми визначили проблему в поточному стані PoW — відсутність безпеки за рахунок *інвестицій в обладнання*.
+
+
+## Запропоноване рішення
+
+Ми прийшли до, мабуть, очевидного, наївного та простого рішення: **додати до PoW те, чого вже не вистачає, — інвестицію або долю. Але замість того, щоб примусити мати долю, чи іншими словами заставу, в апаратному обладнанні, ми вирішили зробити примусовою долю в монеті безпосередньо**. Такий підхід можна назвати "PoW з членством" (MPOW - від англ. "Membership POW"), оскільки монету можуть видобувати лише члени, тобто власники монет.
 
 \
-A `Stake` is included in a `Block`, which consists of an `address` and a `reserve proof` of the amount, belonging to this address, not less than the required minimum.
+Основна ідея полягає в тому, що для видобутку блоку майнер повинен зробити _заставу_ в кількості монет, не меншій від поточної мінімальної суми. Слід зазначити, що подібна ідея була вперше запропонована Ци Чжоу [3], однак наш підхід зовсім відмінний.
 
-The address that receives coinbase reward must be the same that is used in the `reserve proof`. This is requred in order to prevent using someone else's reserve proofs for mining. To enable validation of this requirement the coinbase transaction's `payment proof` is included into the `Stake`.
+Замість надсилання у coinbase-транзакції монет у якості застави, як ми початково пропонували в  'PoW with Stake' [4], тут пропонується інший підхід, котрий використовує функціонал "доказу резерву" і втілює так звану, "холодну заставу". Це працює наступним чином.
 
 \
-The `base stake` `S` is minimal, and same stake can be used several times in a row under these conditions:
+`Застава` включається у `блок`, і складаєьтся вона із `адреси` і `доказу резерву` суми, яка належить цій адресі, не меншої ніж необхідний мінімум.
 
-same `key_image` of the each `ReserveProofEntry` of the block's `stake` can be used in last `N` blocks only `M` times, which is 
+Адреса, на яку надходить нагорода за блок мусить бути тією ж, що й використана у `доказі резерву`. Це потрібно для запобігання використання чужої застави під час майнінгу. Для перевірки цього, у `заставу` включається також `доказ платежу` coinbase-транзакції нагороди за блок.
+
+
+\
+`Базова застава` `S` є мінімальною, і може повторно використовуватись кілька разів під ряд, якщо виконано наступні умови:
+
+той самий `key_image` кожного `ReserveProofEntry` у `заставі` блоку може бути використаний у останніх `N` блоків лишень `M` разів, що визначається за формулою: 
 
 `M = A ÷ S`
 
-where `A` is actual stake, and `B` is base (minimal) stake, `N` is `money unlock window`.
+де `A` - актуальна застава, `B` - базова (мінімальна) застава, `N` є `вікном розблокування видобутих монет`.
 
-Lets give an example, say if current minimum stake is 5 000 KRB and a miner included in a block reserve proof of 10 000 KRB, then he can mine 2 blocks out of 10 last blocks with this reserve proof, then he will have to wait untill someone else mines few more blocks.
+Наприклад, якщо поточна мінімальна застава становить 5 000 крб., а майнер включає у блоки доказ резерву на суму 10 000 крб., то він може добути 2 блоки із останніх 10-ти блоків із цим доказом резерву, після чого він муситиме зачекати поки хтось інший не намайнить ще кілька блоків.
 
 \
-Coins in stake's reserve proof must be mature, i.e. can only be from transactions older than N blocks. This is to prevent the sending coins immediately after they were used in a block in order to generate new `reserve proof` and reusing them.
+Монети у `доказі резерву` мусять бути "дозрілими", тобто можуть бути лишень із транзакцій, старших ніж N блоків. Це необхідно для запобігання негайної відправки монет після того як вони добули блок щоб згенерувати новий `доказ резерву` і повторно їх використати.
 
 
-## Defining minimum stake
+## Визначення мінімальної застави
 
-Abovementioned `minimum stake` can not be fixed and arbitrary guesstimated, it should be deterministic and dymamically adjusted by the current `supply` and `reward`, as was initially proposed in [4]. The `minimum stake` should be based on economical security of the network and profitability of the mining.
+Вищезгадана `мінімальна застава` не може бути фіксованою і довільно встановленою розробниками. Вона має бути детермінованою і визначеною алгоритмічно на основі поточної кількості монет у обігу та винагороди за блок, так як було запропоновано у [4]. Тобто, `мінімальна застава` має базуватись на економічній безпеці мережі й привабливості майнінгу.
 
-### Security approach
+### Підхід з точки зору безпеки
 
-From security standpoint we need to select such stake level, which will ensure that significant percent (at least 25%) of all emitted coins will be constantly engaged in mining and securing the chain. Obtaining large percent of coins in circulation in order to *monopolize mining* will be prohibitive.
+З точки зору безпеки потрібно вибрати такий рівень застави, при якому значна кількість емітованих монет (принаймні 25%) була би задіяна у майнгінгу і підтримці безпеки мережі. Отримання великого відсотка монет в обігу з метою *монополізації видобутку* буде непосильною задачею. 
 
-Let emitted coins is `E`, then emission-based *stake* `Se` can be determined from total emission divided by estimated number of mined blocks per day `L`, divided by `P`, which is the part of total number of coins in circulation, targeted to be engaged in mining (for 25% of emission `P` = 4):
+Нехай емітовані монети це `E`, тоді емісійна *застава* `Se` може бути визначена із всієї емісії поділеної на розрахункову кількість видобутих блоків на день `L`, поділеної на `P`, що є частиною всієї емісї яку ми хочемо задіяти у майнінгу (для 25% емісії `P` становить 4):
 
-`Se = E ÷ L ÷ P`".
+`Se = E ÷ L ÷ P`.
 
-### Attractiveness approach
+### Підхід з точки зору привабливості
 
-Mining with *stake* must be economically profitable. **It is extremely important to select the base stake level that will be attractive to miners.** Too high `minimum stake` will make mining with *stake* unprofitable and unattractive, potentially leading to the spiral of death and blockchain getting stuck. Therefore the `minimum stake` should be defined in such a manner that it will ensure the profitability and attactivenes of mining. We also have to remember that the reward is diminishing over time according to the emission curve, and this has to be taken into account to retain profitability and attractiveness as well.
+Майнінг із *заставою* повинен бути економічно вигідним. **Критично важливо встановити базову заставу на такому рівні, який забезпечував би привабливість майнінгу.** Зависока `мінімальна застава` може зробити майнінг із заставою неприбутковим і непривабливим, що потенційно може призвести до спіралі смерті і зупинки блокчейну. Тому `мінімальна застава` має бути визначена таким чином, щоб забезпечувати прибутковість і привабливість. Крім того слід мати на увазі й те, що нагорода за блок постійно зменшується з плином часу згідно з графіком емісії. 
 
-The *interest rate* `I` of *stake deposit* can be determined as:
+*Процентна ставка* `I` *заставного депозиту* може бути визначена:
 
 `I = R × 100 ÷ Si`,
 
-where `R` is the current reward, `Si` is the required stake, optimal for profitability. Lets call this profitability- or interest-driven stake `Si`. The desired interest rate will allow us to find *stake* which satisfies the requirement of interest rate to be within attractive limits:
+де `R` це поточна винагорода за блок, `Si` - потрібна застава, оптимальна для прибутковості. Назвімо цю `Si` "прибутковою заставою". Бажана "процентна ставка" тобто процент прибутковості дозволить нам знайти *заставу* яка задовільняє цей рівень прибутковості:
 
 `Si = R ÷ I × 100 = R × 100 ÷ I`.
 
-### So what's the minimum stake? 
+### То яка ж мінімальна ставка? 
 
-Finally, we combine the profitability-driven stake `Si` and emission-driven stake `Se` into golden mean and get our `base stake`:
+Нарешті ми можемо об'єднати прибуткову заставу `Si` та емісійну заставу `Se` в золоту середину  і отримуємо нашу `базову заставу`:
 
 `S = (Si + Se) ÷ 2`
 
-or
+або
 
 `S = (R ÷ I × 100 + E ÷ L ÷ P) ÷ 2`.
 
-The part `I ÷ 100` can be rounded to 667, because the interest rate per day `I` calculated using emission-based stake and reward is 0.15:
+Частина `100 ÷ I` може бути заокруглена до 667, тому що добова прибутвова ставка `I` визначена за допомогою емісійної застави становить 0.15:
 
 `S = (R × 667 + E ÷ L ÷ P) ÷ 2`.
 
-This is the base value of the collateral stake.
+Це формула визначення суми базової застави. 
 
 
-## Pros and cons
+## Плюси і мінуси
 
-The benefit of this approach is the ability of a so-called 'cold stake', i.e. using the 'reserve proofs', generated on air-gapped, secure 'cold wallet'. 
+### Переваги
 
-The downside is the blockchain bloat because of the size of the `reserve proofs` included, which can be significantly large. This can be addressed by imposing a limit of the maximum `reserve proof` size, i.e. the requirement of the wallet outputs optimization in order to consolidate them into a fewer outputs of larger amount(s). When consolidated wallet can generate the `reserve proof` of a size well less than 10 KB, and this is the proposed max limit of a `reserve proof` size.
+* Перевагою цього підходу є можливість так званого "холодного стейкінгу", тобто використання доказів резерву згенерованих у "холодних гаманцях" на відключених від мережі ПК в цілях безпеки, а також тому що для майнінгу не потрібні гарячі гаманці відповідно зменшується ризик доступу до коштів сторонніми.
 
-### What's about 51% attack?
+### Недоліки
 
-Since a miner can get one block per minimal stake, and profitability approach ensures it is reasonable and not too high, it will hopefully attact more miners, which in turn will lead to a higher hashrate, with which a miner with large stake will have to compete, thus making it harder to conduct the attack. So it will not be enough to have sufficient stake to get minimum number of block in alternative chain (current reoganization depth limit is 10 blocks), but it also will require enough hashrate, which, we hope, will not be a simple to achieve thanks to a so-called BLODHA [5], which we are going to add to POW part. Thit will make it hader to implement pooled mining, hashrate rentals and will add some botnet resistance.
+* Недоліком є збільшення розміру блокчейну оскільки в кожен блок включається доказ резерву, доказ платежу. Доказ резерву може бути доволі великим. Цю проблему можна суттєво зменшити встановлюючи обмеження на максимально допустимий розмір доказу резерву. Тобто гаманці слід буде оптимізувати зменшивши кількість виходів, після оптимізації доказ резерву не перевищуватиме 10 Кб, це і є пропонованим лімітом. 
+
+* Можливий суттєвий вплив на механізм невідстежуваності транзакцій: якщо якась транзакція використовує певні виходи як приманки у кільцевому підписі, а потім ті ж виходи використані у доказі резерву застави блоку, стає очевидним що ті виходи були несправжніми. Це дає можливість відсіювати частину членів кільцевих підписів. Частково уникнути відсіювання можливо не включаючи ті виходи, які були використані у доказах резерву застав через імовірність того, що вони будуть використані знову.
 
 
-## Reference implementation
+### Як щодо атак-51%?
 
-C++ implementation of basic structures:
+Оскільки майнер може добути один блок на одну мінімальну заставу, а завдяки прибутковомц підходу вона алгоритмічно не повинна бути надто високою, то це повинно привабити більше майнерів, що призведе до більшого хешрейту із яким потрібно буде боротись тому хто надумає вчинити атаку. Недостатньо буде мати достатньо карбованців на необхідну заставу, щоб намайнити потрібну кількість альтернативних блоків (зараз межа глибини реорганізації 10 блоків). Потрібні будуть також достатні майнінгові потужності, що буде непростою задачею завдяки так званій технології  BLODHA [5], яка му плануємо впровадити разом з пропонованим тут алгоритмом застави. Вона також утруднить створення майнінгових пулів, оренди майнінгових потужностей і додасть певний захист від ботнетів.
+
+
+## Референсна реалізація
+
+Імплементація на C++ основних структур:
 
 ```
 struct ReserveProofEntry {
@@ -149,7 +160,7 @@ struct BlockTemplate : public BlockHeader {
 };
 ```
 
-The example of the entire block with a stake in JSON format:
+Приклад повного блоку із заставою у форматі JSON:
 ```
 {
    "major_version":5,
@@ -572,12 +583,12 @@ The example of the entire block with a stake in JSON format:
 ```
 
 
-## Notes
+## Примітки
 
-A variant with pair of mining and reserve addresses, where mining address must be in the `message` field of the `reserve proof` so the `reserve proof` is valid only with this address), is discarded due to various risks of abuse.
+Варіант із парою пов'язаних адрес для застави і майнінгу, при якому адреса для майнінгу має бути включена у поле `message` доказу резерву так аби він був дійсний лишень для тієї адреси відкинуто з огляду на можливі непередбачувані ризики зловживань.
 
 
-## References
+## Посилання
 
 [1] https://twitter.com/zawy3/status/1082199522812612608
 
@@ -587,4 +598,4 @@ A variant with pair of mining and reserve addresses, where mining address must b
 
 [4] https://github.com/Karbovanets/papers/blob/master/POWS4.md
 
-[5] https://github.com/Karbovanets/papers/blob/master/KIP-001.md
+[5] https://github.com/Karbovanets/papers/blob/master/KIP-001_Ukr.md
